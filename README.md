@@ -1,14 +1,2 @@
-         ___        ______     ____ _                 _  ___  
-        / \ \      / / ___|   / ___| | ___  _   _  __| |/ _ \ 
-       / _ \ \ /\ / /\___ \  | |   | |/ _ \| | | |/ _` | (_) |
-      / ___ \ V  V /  ___) | | |___| | (_) | |_| | (_| |\__, |
-     /_/   \_\_/\_/  |____/   \____|_|\___/ \__,_|\__,_|  /_/ 
- ----------------------------------------------------------------- 
-
-
-Hi there! Welcome to AWS Cloud9!
-
-To get started, create some files, play with the terminal,
-or visit https://docs.aws.amazon.com/console/cloud9/ for our documentation.
-
-Happy coding!
+# Serverless Data Engineering Pipeline 
+AWS provides serverless service that allows data scientist to process huge data without worrying about details of infrastructures. In this project, I built a serverless data pipeline that can extract any account's tweets on Twitter in real time, perform sentiment analysis on all the tweets and save results as csv to s3 bucket. To build this data pipeline, I utilized the following service from AWS: Lambda, DynamoDB, CloudWatch, Simple Queue Service and S3. 
