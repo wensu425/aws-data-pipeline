@@ -3,6 +3,7 @@ import json
 import boto3
 import botocore
 #import pandas as pd
+import tweepy as tw
 import pandas as pd
 import wikipedia
 import boto3
@@ -77,15 +78,27 @@ def delete_sqs_msg(queue_name, receipt_handle):
     LOG.info(delete_log_msg_resp)
     return response
 
-def names_to_wikipedia(names):
 
-    wikipedia_snippit = []
-    for name in names:
-        wikipedia_snippit.append(wikipedia.summary(name, sentences=1))
+def get_tweets(name):
+    consumer_key= 'oJ4NH5rob6F28ZsWOZB7BP0cg'
+    consumer_secret= 'i0EkS0sEKleUqnQsuHm5MWxGVdGbfKvktcygIOBZCo6aPDUg9k'
+    access_token= '1324473398001602561-tDUcCpGRwSSVxwnx8QoY0gAUOGkJsp'
+    access_token_secret= 'enGR8EeAvT9U724JgmrWw4Mq73wgokaa3AnuuOAGfA9Z6'
+    auth = tw.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tw.API(auth, wait_on_rate_limit=True)
+    date_since = "2020-11-4"
+    tweets = tw.Cursor(api.user_timeline,
+              screen_name=name,
+              lang="en",
+              since=date_since,tweet_mode="extended").items(10)
+    time_text = list(zip(*[(str(tweet.created_at),tweet.full_text) for tweet in tweets]))
+    time_stamps = time_text[0]
+    full_text = time_text[1]
     df = pd.DataFrame(
         {
-            'names':names,
-            'wikipedia_snippit': wikipedia_snippit
+            'time_stamps':time_stamps,
+            'full_text': full_text
         }
     )
     return df
@@ -100,7 +113,7 @@ def create_sentiment(row):
     sentiment = payload['Sentiment']
     return sentiment
 
-def apply_sentiment(df, column="wikipedia_snippit"):
+def apply_sentiment(df, column="full_text"):
     """Uses Pandas Apply to Create Sentiment Analysis"""
 
     df['Sentiment'] = df[column].apply(create_sentiment)
@@ -134,7 +147,7 @@ def lambda_handler(event, context):
     # Process Queue
     for record in event['Records']:
         body = json.loads(record['body'])
-        company_name = body['guid']
+        company_name = body['screen_name']
 
         #Capture for processing
         names.append(company_name)
@@ -149,11 +162,11 @@ def lambda_handler(event, context):
 
     # Make Pandas dataframe with wikipedia snippts
     LOG.info(f"Creating dataframe with values: {names}")
-    df = names_to_wikipedia(names)
+    df = get_tweets(names[0])
 
     # Perform Sentiment Analysis
     df = apply_sentiment(df)
-    LOG.info(f"Sentiment from FANG companies: {df.to_dict()}")
+    LOG.info(f"Sentiment from tweet_query companies: {df.to_dict()}")
 
     # Write result to S3
     write_s3(df=df, bucket="sentiment-target", name=names)

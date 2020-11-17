@@ -4,3 +4,4 @@ wikipedia
 boto3
 botocore
 python-json-logger
+tweepy

@@ -8,7 +8,7 @@ import sys
 import os
 
 DYNAMODB = boto3.resource('dynamodb')
-TABLE = "fang"
+TABLE = "query_trump"
 QUEUE = "producer"
 SQS = boto3.client("sqs")
 
