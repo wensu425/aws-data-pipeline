@@ -169,4 +169,6 @@ def lambda_handler(event, context):
     LOG.info(f"Sentiment from tweet_query companies: {df.to_dict()}")
 
     # Write result to S3
+    s3 = boto3.resource('s3')
+    s3.Object("sentiment-target", "['realDonaldTrump']_sentiment.csv").delete()
     write_s3(df=df, bucket="sentiment-target", name=names)
