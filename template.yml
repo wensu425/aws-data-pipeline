@@ -11,7 +11,7 @@ Resources:
       MemorySize: 128
       Timeout: 15
       Role: 'arn:aws:iam::812134951040:role/admin_lambda'
-      CodeUri: ./consumer/consumer
+      CodeUri: ./consumer/.debug
     
     producer:
     Type: 'AWS::Serverless::Function'
@@ -22,4 +22,4 @@ Resources:
       MemorySize: 128
       Timeout: 15
       Role: 'arn:aws:iam::812134951040:role/admin_lambda'
-      CodeUri: ./producer/producer
+      CodeUri: ./producer/.debug
