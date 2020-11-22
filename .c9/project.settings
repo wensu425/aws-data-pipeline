@@ -2,6 +2,7 @@
     "build": {
         "@saveall": true
     },
+    "instance": {},
     "language": {
         "tern_defs": {
             "json()": {

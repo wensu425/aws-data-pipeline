@@ -87,11 +87,10 @@ def get_tweets(name):
     auth = tw.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tw.API(auth, wait_on_rate_limit=True)
-    date_since = "2020-11-4"
     tweets = tw.Cursor(api.user_timeline,
               screen_name=name,
               lang="en",
-              since=date_since,tweet_mode="extended").items(30)
+              tweet_mode="extended",include_rts=False).items(20)
     time_text = list(zip(*[(str(tweet.created_at),tweet.full_text) for tweet in tweets]))
     time_stamps = time_text[0]
     full_text = time_text[1]
@@ -172,3 +171,5 @@ def lambda_handler(event, context):
     s3 = boto3.resource('s3')
     s3.Object("sentiment-target", "['realDonaldTrump']_sentiment.csv").delete()
     write_s3(df=df, bucket="sentiment-target", name=names)
+    
+    
