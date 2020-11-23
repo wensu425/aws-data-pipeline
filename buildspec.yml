@@ -5,8 +5,4 @@ phases:
         python: 3.8
   build:
     commands:
-      - aws cloudformation package --template-file template.yml
-artifacts:
-  type: zip
-  files:
-    - quotes.yml
+      - echo ""
